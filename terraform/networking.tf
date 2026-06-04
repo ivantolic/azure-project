@@ -21,6 +21,8 @@ resource "azurerm_subnet" "aks_subnet" {
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.private_vnet.name
   address_prefixes     = ["10.10.1.0/24"]
+
+  service_endpoints = ["Microsoft.Storage"]
 }
 
 resource "azurerm_subnet" "postgres_subnet" {
@@ -48,6 +50,8 @@ resource "azurerm_subnet" "function_subnet" {
   virtual_network_name = azurerm_virtual_network.private_vnet.name
   address_prefixes     = ["10.10.3.0/24"]
 
+  service_endpoints = ["Microsoft.Storage"]
+
   delegation {
     name = "function-delegation"
 
@@ -73,6 +77,8 @@ resource "azurerm_subnet" "private_endpoints_subnet" {
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.private_vnet.name
   address_prefixes     = ["10.10.5.0/24"]
+
+  service_endpoints = ["Microsoft.Storage"]
 }
 
 resource "azurerm_subnet" "jump_subnet" {
@@ -81,7 +87,7 @@ resource "azurerm_subnet" "jump_subnet" {
   virtual_network_name = azurerm_virtual_network.jump_vnet.name
   address_prefixes     = ["10.20.1.0/24"]
 
-  service_endpoints = ["Microsoft.KeyVault"]
+  service_endpoints = ["Microsoft.KeyVault", "Microsoft.Storage"]
 }
 
 resource "azurerm_virtual_network_peering" "jump_to_private" {
