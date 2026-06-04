@@ -80,6 +80,8 @@ resource "azurerm_subnet" "jump_subnet" {
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.jump_vnet.name
   address_prefixes     = ["10.20.1.0/24"]
+
+  service_endpoints = ["Microsoft.KeyVault"]
 }
 
 resource "azurerm_virtual_network_peering" "jump_to_private" {

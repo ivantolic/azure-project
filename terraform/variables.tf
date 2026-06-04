@@ -23,3 +23,9 @@ variable "common_tags" {
     student    = "student@algebra.hr"
   }
 }
+
+variable "admin_ip_cidr" {
+  description = "Public IP address allowed to access Key Vault, in CIDR format"
+  type        = string
+  sensitive   = true
+}
