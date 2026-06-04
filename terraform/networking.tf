@@ -31,6 +31,8 @@ resource "azurerm_subnet" "postgres_subnet" {
   virtual_network_name = azurerm_virtual_network.private_vnet.name
   address_prefixes     = ["10.10.2.0/24"]
 
+  service_endpoints = ["Microsoft.Storage"]
+
   delegation {
     name = "postgresql-delegation"
 

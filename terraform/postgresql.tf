@@ -35,6 +35,7 @@ resource "azurerm_postgresql_flexible_server" "main" {
   name                = "psql-itolic-${random_string.postgres_suffix.result}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
+  zone                = "1"
 
   version = "16"
 
