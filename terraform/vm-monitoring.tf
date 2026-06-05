@@ -22,7 +22,9 @@ resource "azurerm_monitor_data_collection_rule" "vm_windows_security_logs" {
       streams = ["Microsoft-Event"]
 
       x_path_queries = [
-        "Security!*[System[(Level=0 or Level=1 or Level=2 or Level=3 or Level=4)]]"
+        "Security!*[System[(Level=0 or Level=1 or Level=2 or Level=3 or Level=4)]]",
+        "System!*[System[(Level=0 or Level=1 or Level=2 or Level=3 or Level=4)]]",
+        "Application!*[System[(Level=0 or Level=1 or Level=2 or Level=3 or Level=4)]]"
       ]
     }
   }
@@ -49,4 +51,21 @@ resource "azurerm_monitor_data_collection_rule_association" "jump_vm_security_lo
   depends_on = [
     azurerm_virtual_machine_extension.jump_vm_ama
   ]
+}
+resource "azurerm_log_analytics_datasource_windows_event" "application_events" {
+  name                = "collect-application-events"
+  resource_group_name = azurerm_resource_group.main.name
+  workspace_name      = azurerm_log_analytics_workspace.main.name
+
+  event_log_name = "Application"
+  event_types    = ["Information", "Warning", "Error"]
+}
+
+resource "azurerm_log_analytics_datasource_windows_event" "system_events" {
+  name                = "collect-system-events"
+  resource_group_name = azurerm_resource_group.main.name
+  workspace_name      = azurerm_log_analytics_workspace.main.name
+
+  event_log_name = "System"
+  event_types    = ["Information", "Warning", "Error"]
 }
