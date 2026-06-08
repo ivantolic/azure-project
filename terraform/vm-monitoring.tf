@@ -37,8 +37,9 @@ resource "azurerm_virtual_machine_extension" "jump_vm_ama" {
   virtual_machine_id         = azurerm_windows_virtual_machine.jump_vm.id
   publisher                  = "Microsoft.Azure.Monitor"
   type                       = "AzureMonitorWindowsAgent"
-  type_handler_version       = "1.29"
+  type_handler_version       = "1.42"
   auto_upgrade_minor_version = true
+  automatic_upgrade_enabled  = true
 
   tags = var.common_tags
 }
