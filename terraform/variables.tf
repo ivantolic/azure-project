@@ -34,3 +34,8 @@ variable "app_gateway_backend_ip" {
   description = "Private IP address of the AKS internal LoadBalancer service"
   type        = string
 }
+
+variable "app_gateway_ssl_certificate_secret_id" {
+  description = "Key Vault secret ID of the SSL certificate used by Application Gateway"
+  type        = string
+}

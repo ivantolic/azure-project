@@ -20,9 +20,19 @@ resource "azurerm_application_gateway" "main" {
     capacity = 1
   }
 
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.appgw_identity.id]
+  }
+
   gateway_ip_configuration {
     name      = "appgw-ip-configuration"
     subnet_id = azurerm_subnet.appgw_subnet.id
+  }
+
+  frontend_ip_configuration {
+    name                 = "frontend-public-ip"
+    public_ip_address_id = azurerm_public_ip.appgw_pip.id
   }
 
   frontend_port {
@@ -30,9 +40,14 @@ resource "azurerm_application_gateway" "main" {
     port = 80
   }
 
-  frontend_ip_configuration {
-    name                 = "frontend-public-ip"
-    public_ip_address_id = azurerm_public_ip.appgw_pip.id
+  frontend_port {
+    name = "frontend-port-https"
+    port = 443
+  }
+
+  ssl_certificate {
+    name                = "appgw-kv-ssl-cert"
+    key_vault_secret_id = var.app_gateway_ssl_certificate_secret_id
   }
 
   backend_address_pool {
@@ -55,6 +70,14 @@ resource "azurerm_application_gateway" "main" {
     protocol                       = "Http"
   }
 
+  http_listener {
+    name                           = "https-listener"
+    frontend_ip_configuration_name = "frontend-public-ip"
+    frontend_port_name             = "frontend-port-https"
+    protocol                       = "Https"
+    ssl_certificate_name           = "appgw-kv-ssl-cert"
+  }
+
   request_routing_rule {
     name                       = "rule-http-to-aks-sample-app"
     rule_type                  = "Basic"
@@ -64,9 +87,13 @@ resource "azurerm_application_gateway" "main" {
     priority                   = 100
   }
 
-  identity {
-    type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.appgw_identity.id]
+  request_routing_rule {
+    name                       = "rule-https-to-aks-sample-app"
+    rule_type                  = "Basic"
+    http_listener_name         = "https-listener"
+    backend_address_pool_name  = "backend-aks-sample-app"
+    backend_http_settings_name = "backend-http-settings"
+    priority                   = 110
   }
 
   tags = var.common_tags
