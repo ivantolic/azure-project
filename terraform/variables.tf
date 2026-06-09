@@ -29,3 +29,8 @@ variable "admin_ip_cidr" {
   type        = string
   sensitive   = true
 }
+
+variable "app_gateway_backend_ip" {
+  description = "Private IP address of the AKS internal LoadBalancer service"
+  type        = string
+}

@@ -47,3 +47,9 @@ resource "azurerm_role_assignment" "aks_kubelet_acr_pull" {
     azurerm_kubernetes_cluster.main
   ]
 }
+
+resource "azurerm_role_assignment" "aks_identity_network_contributor_vnet" {
+  scope                = azurerm_virtual_network.private_vnet.id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_user_assigned_identity.app_identity.principal_id
+}
