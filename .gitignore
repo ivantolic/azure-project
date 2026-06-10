@@ -38,3 +38,10 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+docs/screenshots/
+docs/Screenshots/
+*.png
+*.jpg
+*.jpeg
+*.webp
